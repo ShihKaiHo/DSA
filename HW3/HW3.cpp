@@ -32,7 +32,19 @@ int main()
     {
         set_Map(Map);
         vector<int> sol;
-        find_sol(Map,sol);
+        if(!find_sol(Map,sol))
+        {
+            printf("Action:\n-1\n");
+            printf("Final:\n");
+            for(int i=0;i<4;i++)
+            {
+                for(int j=0;j<4;j++)
+                {
+                    printf("-1 ");
+                }
+                printf("\n");
+            }
+        }
     }
     t1=clock();
     print("total time is ....")
@@ -53,27 +65,7 @@ bool find_sol(unsigned long long Map,vector<int>& sol)
         return true;
     }
     if(is_dead(Map))
-    {
-        if(!sol.empty())
-        {
-            sol.pop_back();
-            return false;
-        }
-        else
-        {
-            printf("Action:\n-1\n");
-            printf("Final:\n");
-            for(int i=0;i<4;i++)
-            {
-                for(int j=0;j<4;j++)
-                {
-                    printf("-1 ");
-                }
-                printf("\n");
-            }
-            return false;
-        }
-    }
+        return false;
 
     for(int _move=0;_move<4;_move++)
     {
@@ -82,6 +74,7 @@ bool find_sol(unsigned long long Map,vector<int>& sol)
             sol.push_back(_move);
             if(find_sol(nextMap(Map,_move),sol))
                 return true;
+            sol.pop_back();
         }
     }
     return false;
@@ -169,7 +162,7 @@ bool is_dead(unsigned long long& Map)
     {
         if(i%4!=3)
         {
-            if((compare>>(60-(i>>2)) & 15 )==0)
+            if((compare>>(60-(i<<2)) & 15 )==0)
             {
                 return false;
             }
@@ -178,7 +171,7 @@ bool is_dead(unsigned long long& Map)
     compare=Map ^ (Map<<16);
     for(int i=0;i<12;i++)
     {
-        if((compare>>(60-(i>>2)) & 15 ) == 0)
+        if((compare>>(60-(i<<2)) & 15 ) == 0)
         {
             return false;
         }
