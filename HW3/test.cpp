@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <iostream>
 using namespace std;
 int n = 0;
@@ -140,3 +141,58 @@ void print()
         //分別印出推薦商品(出現次數最多的商品中編號最小)，與目前購買組合共同出現的次數，以及目前購買組合一共出現在多少歷史紀錄中
         cout << max << " "<< maxf <<" "<< y;
 }
+=======
+#include <iostream>
+using namespace std;
+
+
+    int main()
+    {
+        int n = 0;
+        int m = 0;
+        double S = 0;
+
+        cin >> n >> m >> S;
+        //前三列輸入商品數、交易總紀錄數目、推薦門檻
+        int** trans = new int*[m+1];
+        int* itemCnt = new int[m+1];
+        for(int i = 0; i <= m; i++)
+        {
+            int len = 0;
+            cin >> len;
+
+
+            itemCnt[i] = len;
+            trans[i] = new int[len];
+
+            for(int j = 0; j < len; j++)
+            {
+                cin >> trans[i][j];
+            }
+        }
+        cout << "eofij";
+      for(int i = 0; i <= m; i++)
+      {
+            for(int j = 0; j < itemCnt[i]; j++)
+            {
+                cout << trans[i][j]<< " ";
+            }
+            cout << "\n";
+      }
+
+        cout << "eofij";
+         //some delete statements
+
+
+
+
+
+
+        delete []trans;
+        delete []itemCnt;
+
+            return 0;
+
+
+    }
+>>>>>>> c815147133690dda30e7fb2c31f4a1e047d846b4
