@@ -1,12 +1,13 @@
+#include <stdio.h>
 #include <iostream>
-#include <cstdlib>
-#include <algorithm>
-#include <cmath>
 using namespace std;
-
-int main()
+int main ()
 {
-int a=5;
-cout <<31-__builtin_clz(a);
-return 0;
+  char c;
+  puts ("Enter text. Include a dot ('.') in a sentence to exit:");
+  do {
+    scanf("%c",&c);
+    cout<<c<<endl;
+  } while (c != '.');
+  return 0;
 }
