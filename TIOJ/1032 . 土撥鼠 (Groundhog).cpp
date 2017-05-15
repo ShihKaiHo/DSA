@@ -3,6 +3,23 @@
 #include <vector>
 using namespace std;
 
+int check_is_good(int visit,vector<unordered_map<int,int>>& tunnel,unordered_map<int,bool>& check,unordered_map<int,bool>& is_visit)
+{
+    if(check.find(visit)==check.end())
+    {
+        return 0;
+    }
+    is_visit[visit]=true;
+    for(auto it= tunnel[visit].begin();it!=tunnel[visit].end();it++)
+    {
+        if(is_visit.find(it->first)==is_visit.end() && it->second>0)
+        {
+            return check_is_good(it->first,tunnel,check,is_visit);
+        }
+    }
+    return 1;
+}
+
 int main()
 {
     int num_of_hole;
@@ -31,7 +48,7 @@ int main()
                 }
                 else
                 {
-                    got->second++;
+                    tunnel[a][b]++;
                     tunnel[b][a]++;
                 }
                 break;
@@ -39,41 +56,31 @@ int main()
             case 1:
             {
                 scanf("%d %d",&a,&b);
-                tunnel[a][b]--;
-                tunnel[b][a]--;
+                if(tunnel[a].find(b) != tunnel[a].end())
+                {
+                    tunnel[a][b] --;
+                    tunnel[b][a] --;
+
+                    if(tunnel[a][b] == 0)
+                    {
+                        tunnel[a].erase(b);
+                        tunnel[b].erase(a);
+                    }
+                }
                 break;
             }
             case 2:
             {
                 scanf("%d",&n);
+                unordered_map<int,bool> check;
                 for(int i=0;i<n;i++)
                 {
                     scanf("%d",&k);
-                    seeing_hole.push_back(k);
+                    check[k]=true;
                 }
-                int stop=1;
-                for(auto it=seeing_hole.begin();it!=seeing_hole.end();it++)
-                {
-                    if(stop==0)
-                        break;
-                    for(auto it2=tunnel[*it].begin();it2!=tunnel[*it].end();it2++)
-                    {
-                        if(stop==0)
-                            break;
-
-                        for(auto it3=seeing_hole.begin();it3!=seeing_hole.end();it3++)
-                        {
-                            if(it2->first=*it3 && it2->second<=0)
-                            {
-                                stop=0;
-                                printf("0\n");
-                                break;
-                            }
-                        }
-                    }
-                }
-                printf("1\n");
-                seeing_hole.clear();
+                unordered_map<int,bool> is_visit;
+                auto visit=check.begin();
+                printf("%d\n",check_is_good(visit->first,tunnel,check,is_visit));
                 break;
             }
         }
