@@ -1,7 +1,0 @@
-This is TeX, Version 3.14159265 (MiKTeX 2.9 64-bit) (preloaded format=tex 2017.4.13)  13 APR 2017 17:32
-**./test.sh
-(test.sh
-! You can't use `macro parameter character #' in vertical mode.
-l.1 #
-     !/bin/bash
-? 

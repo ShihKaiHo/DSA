@@ -1,87 +1,108 @@
-#include <iostream>
-#include <stdio.h>
-#include <vector>
+#include <cstdio>
 #include <unordered_map>
-
+#include <vector>
 using namespace std;
 
-int main(int argc, char const *argv[])
+int check_is_good(int visit,vector<unordered_map<int,int>>& tunnel,unordered_map<int,bool>& check,unordered_map<int,bool>& is_visit)
 {
-	int N, M;
-	scanf("%d%d", &N, &M);
+    if (is_visit.find(visit)!=is_visit.end())
+    {
+        return 1;
+    }
+    if(check.find(visit)==check.end())
+    {
+        return 0;
+    }
+    is_visit[visit]=true;
+    for(auto it= tunnel[visit].begin();it!=tunnel[visit].end();it++)
+    {
+        if(is_visit.find(it->first)==is_visit.end())
+        {
+            if( !check_is_good(it->first,tunnel,check,is_visit))
+                return 0;
+        }
+    }
+    return 1;
+}
 
-	vector < unordered_map <int, int> > path_data(N); //<index, number>
+int main()
+{
+    int num_of_hole;
+    int num_of_query;
+    int action;
 
-	for(int times=0;times<M;times++){
-		int operation;
-		scanf("%d", &operation);
-		//printf("operation = %d\n", operation);
-		if(operation == 0){
-			int a, b;
-			scanf("%d%d", &a, &b);
+    vector<int> seeing_hole;
+    int a, b;
+    int n;
+    int k;
+    scanf("%d %d",&num_of_hole,&num_of_query);
+    vector<unordered_map<int,int>> tunnel(num_of_hole);
+    for(int i=0;i<num_of_query;i++)
+    {
+        scanf("%d",&action);
+        switch(action)
+        {
+            case 0:
+            {
+                scanf("%d %d",&a,&b);
+                if(a>num_of_hole||b>num_of_hole||a==b)
+                    break;
+                auto got=tunnel[a].find(b);
+                if(a>b)
+                {
+                    swap(a,b);
+                }
+                if(got==tunnel[a].end())
+                {
+                    tunnel[a][b]=1;
+                    tunnel[b][a]=-1;
+                }
+                else
+                {
+                    tunnel[a][b]++;
+                    tunnel[b][a]--;
+                }
+                break;
+            }
+            case 1:
+            {
+                scanf("%d %d",&a,&b);
+                if(a>num_of_hole||b>num_of_hole||a==b)
+                    break;
+                if(tunnel[a].find(b) != tunnel[a].end())
+                {
+                    tunnel[a][b]--;
+                    tunnel[b][a]++;
 
-			if(a != b){
-				if(path_data[a].find(b) != path_data[a].end() && path_data[b].find(a) != path_data[b].end()){
-					path_data[a][b] ++;
-					path_data[b][a] ++;
-				}else{ // no appearance before
-					path_data[a][b] = 1;
-					path_data[b][a] = 1;
-				}
-			}
-		}
+                    if(tunnel[a][b] == 0)
+                    {
+                        tunnel[a].erase(b);
+                        tunnel[b].erase(a);
+                    }
+                }
+                break;
+            }
+            case 2:
+            {
+                scanf("%d",&n);
+                int counter=0;
+                for(int i=0;i<n;i++)
+                {
+                    scanf("%d",&k);
+                    for(auto it=tunnel[k].begin();it!=tunnel[k].end();it++)
+                    {
+                        counter+=it->second;
+                    }
+                }
+                if(counter==0)
+                    printf("1\n");
+                else
+                    printf("0\n");
+                break;
+            }
+        }
+    }
 
-		if(operation == 1){
-			int c, d;
-			scanf("%d%d", &c, &d);
-			if(path_data[c].find(d) != path_data[c].end() && path_data[d].find(c) != path_data[d].end()){ // the path really exists
-				path_data[c][d] --;
-				path_data[d][c] --;
-
-				if(path_data[c][d] == 0){
-					path_data[c].erase(d);
-					path_data[d].erase(c);
-				}
-			}
-		}
-
-		if(operation == 2){
-			int good = 1;
-
-			int K;
-			scanf("%d", &K);
-
-			if(K > 0){
-				int *k_list = new int [K];
-				int buff;
-				unordered_map <int, bool> check;
-
-				for(int i=0;i<K;i++){
-					scanf("%d", &buff);
-					if(check.find(buff) == check.end()) check[buff] = true;
-					k_list[i] = buff;
-				}
-
-				for(int i=0;i<K;i++){
-					if(0 <= k_list[i] && k_list[i] < N){
-						for(unordered_map<int, int>::iterator it = path_data[k_list[i]].begin(); it != path_data[k_list[i]].end(); it++){
-							if(check.find(it->first) == check.end()){
-								good = 0;
-								break;
-							}
-						}
-					}else{
-						good = 0;
-					}
-
-					if(good == 0)
-						break;
-				}
-				delete [] k_list;
-			}
-			printf("%d\n", good);
-
-		}
-	}
-	return 0;
+    //printf("%d %d",num_of_hole,num_of_query);
+    return 0;
 }

@@ -5,6 +5,10 @@ using namespace std;
 
 int check_is_good(int visit,vector<unordered_map<int,int>>& tunnel,unordered_map<int,bool>& check,unordered_map<int,bool>& is_visit)
 {
+    if (is_visit.find(visit)!=is_visit.end())
+    {
+        return 1;
+    }
     if(check.find(visit)==check.end())
     {
         return 0;
@@ -12,9 +16,10 @@ int check_is_good(int visit,vector<unordered_map<int,int>>& tunnel,unordered_map
     is_visit[visit]=true;
     for(auto it= tunnel[visit].begin();it!=tunnel[visit].end();it++)
     {
-        if(is_visit.find(it->first)==is_visit.end() && it->second>0)
+        if(is_visit.find(it->first)==is_visit.end())
         {
-            return check_is_good(it->first,tunnel,check,is_visit);
+            if( !check_is_good(it->first,tunnel,check,is_visit))
+                return 0;
         }
     }
     return 1;
@@ -40,6 +45,8 @@ int main()
             case 0:
             {
                 scanf("%d %d",&a,&b);
+                if(a>num_of_hole||b>num_of_hole||a==b)
+                    break;
                 auto got=tunnel[a].find(b);
                 if(got==tunnel[a].end())
                 {
@@ -56,6 +63,8 @@ int main()
             case 1:
             {
                 scanf("%d %d",&a,&b);
+                if(a>num_of_hole||b>num_of_hole||a==b)
+                    break;
                 if(tunnel[a].find(b) != tunnel[a].end())
                 {
                     tunnel[a][b] --;
@@ -79,8 +88,14 @@ int main()
                     check[k]=true;
                 }
                 unordered_map<int,bool> is_visit;
-                auto visit=check.begin();
-                printf("%d\n",check_is_good(visit->first,tunnel,check,is_visit));
+                int answer=1;
+                for(auto it=check.begin();it!=check.end();it++)
+                {
+                    answer*=check_is_good(it->first,tunnel,check,is_visit);
+                    if(answer==0)
+                        break;
+                }
+                printf("%d\n",answer);
                 break;
             }
         }
