@@ -1,32 +1,66 @@
 #include "game.h"
 #include <unordered_map>
+using namespace std;
+int trans(int p,int q,int s)
+{
+    return ((s<<6)+(p<<3)+q);
+}
+
+unordered_map<int,double> hash_table;
 double D(int, int, double);
 using namespace std;
-typedef unordered_map< int , unordered_map<int, unordered_map<double,double> > > three_d_map;
-static three_d_map table;
 int main()
 {
-    int p=4;
-    int q=4;
-    double s=0;
-    PRINT(D(p,q,s))
+    PRINT(D(3,4,10))
+    PRINT(D(2,4,30))
+    PRINT(D(2,3,33))
+    PRINT(D(1,3,73))
+    PRINT(D(0,3,123))
+
+
     return 0;
 }
 
 double D(int p, int q, double s)
 {
+    int temp=trans(p,q,s);
     if(s>150)
-        return table[p][q][s]=0;
-    if(p==0 && q==0)
+    {
+        if(hash_table.find(temp)==hash_table.end())
+            hash_table[temp]=0.0;
+        return 0;
+    }
+    else if(p==0 && q==0)
+    {
+        if(hash_table.find(temp)==hash_table.end())
+            hash_table[temp]=s;
         return s;
+    }
     else if(p==0)
-        return (D(p,q-1,s+1)+D(p,q-1,s+2)+D(p,q-1,s+3)+D(p,q-1,s+4)+D(p,q-1,s+5)+D(p,q-1,s+6))/6.0;
+    {
+        if(hash_table.find(temp)==hash_table.end())
+        {
+            hash_table[temp]=0;
+            for(int i=1;i<=6;i++){hash_table[temp]+=D(p,q-1,s+i)/6.0;}
+        }
+        return hash_table[temp];
+    }
     else if(q==0)
-        return (D(p-1,q,s+10)+D(p-1,q,s+20)+D(p-1,q,s+30)+D(p-1,q,s+40)+D(p-1,q,s+50)+D(p-1,q,s+60))/6.0;
-    return (MAX(D(p-1,q,s+10),D(p,q-1,s+1))
-            +MAX(D(p-1,q,s+20),D(p,q-1,s+2))
-            +MAX(D(p-1,q,s+30),D(p,q-1,s+3))
-            +MAX(D(p-1,q,s+40),D(p,q-1,s+4))
-            +MAX(D(p-1,q,s+50),D(p,q-1,s+5))
-            +MAX(D(p-1,q,s+60),D(p,q-1,s+6)))/6.0;
+    {
+        if(hash_table.find(temp)==hash_table.end())
+        {
+            hash_table[temp]=0;
+            for(int i=1;i<=6;i++){hash_table[temp]+=D(p-1,q,s+i*10)/6.0;}
+        }
+        return hash_table[temp];
+    }
+    else
+    {
+        if(hash_table.find(temp)==hash_table.end())
+        {
+            hash_table[temp]=0;
+            for(int i=1;i<=6;i++){hash_table[temp]+=MAX(D(p-1,q,s+i*10),D(p,q-1,s+i))/6.0;}
+        }
+        return hash_table[temp];
+    }
 }

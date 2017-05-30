@@ -1,5 +1,4 @@
 #include "game.h"
-
 // Print the game state. For debugging only.
 void gameStatePrint(int gameState[4][2]){
 	printf("Game state:\n");
@@ -43,7 +42,7 @@ int diceSumGame(){
 	return(total);
 }
 
-int main(){	
+int main(){
 	srand(time(NULL));	// Set random seed by using the second of time
 	// Play the games TESTNUM times
 	int score, total=0;
@@ -53,5 +52,5 @@ int main(){
 	}
 	// Compute the average score
 	float average=(float)total/TESTNUM;
-	printf("Average score %f after %d tests\n\n", average, TESTNUM);	
+	printf("Average score %f after %d tests\n\n", average, TESTNUM);
 }
