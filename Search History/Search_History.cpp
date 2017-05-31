@@ -3,7 +3,9 @@
 #include <cstring> //strlen
 #include <string>
 #include <vector>
+#include <iostream>
 using namespace std;
+vector<string> ans;
 struct Node
 {
     Node* children[26];
@@ -11,15 +13,14 @@ struct Node
     Node():is_end(0),children{nullptr}
     {}
 };
-vector<string> get_freqency(Node* root, string& query)
+void find_sol(Node* root, char* query)
 {
     Node* parent=root;
-    vector<string> no_this_word;
-    unsigned int length=query.length();
+    int length=strlen(query);
     for(int i=0;i<length;i++)
     {
         if(!parent->children[CHAR_TO_INDEX(query[i])])
-            return no_this_word;
+            return;
         parent=parent->children[CHAR_TO_INDEX(query[i])];
     }
     if (parent!=nullptr)
@@ -27,8 +28,6 @@ vector<string> get_freqency(Node* root, string& query)
 
     }
 }
-
-
 
 Node* get_new_node()
 {
@@ -64,7 +63,10 @@ int main()
     scanf("%d",&m);
     for(int i=0;i<m;i++)
     {
-
+        scanf("%s",buff);
+        find_sol(root, buff);
+        ans.clear();
     }
+    cout<<root->children[CHAR_TO_INDEX('g')];
     return 0;
 }
