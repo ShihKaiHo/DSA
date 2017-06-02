@@ -2,50 +2,43 @@
 #include <iostream>
 #include <unordered_map>
 using namespace std;
+bool matrix[1000][1000];
 
-unordered_map<unsigned long long,int> is_calcualted;
+unordered_map<int,bool> is_calcualted;
 
-unsigned long long hash_table(unsigned long long left,unsigned long long right,unsigned long long up, unsigned long long down)
+int hash_table(int& x,int& y,int& dimension)
 {
-    return (left<<30)+(right<<20)+(up<<10)+(down);
+    return (x<<20)+(y<<10)+(dimension);
 }
 
-int check_full(bool** matrix,int& left,int& right,int& up, int& down)
+int check_full(int& x,int& y,int& dimension)
 {
-    for(int i=up;i<down;i++)
+    int a=y+dimension;
+    int b=x+dimension;
+    for(int i=y;i<a;i++)
     {
-        for(int j=left;j<right;j++)
-        {
+        for(int j=x;j<b;j++)
             if(matrix[i][j]==0)
                 return 0;
-        }
-
     }
     return 1;
 }
 
-int full_matrix(int n)
-{
-    return n*(n+1)*(2*n+1)/6;
-}
 
-int D(bool** matrix,int left,int right,int up, int down)
+int D(int x,int y,int dimension)
 {
-    unsigned long long key=hash_table(left,right,up,down);
-    if(is_calcualted.find(key)!=is_calcualted.end())
+    if(is_calcualted.find(hash_table(x,y,dimension))!=is_calcualted.end())
         return 0;
-    is_calcualted[hash_table(left,right,up,down)]=true;
-    if((right-left)==1)
+    is_calcualted[hash_table(x,y,dimension)]=true;
+    if(dimension==1)
     {
-        if(matrix[left][up]==1)
+        if(matrix[y][x]==1)
             return 1;
         else
             return 0;
     }
-    if(check_full(matrix,left,right,up,down))
-        return full_matrix(right-left);
-    else
-        return D(matrix,left,right-1,up,down-1)+D(matrix,left+1,right,up,down-1)+D(matrix,left+1,right,up+1,down)+D(matrix,left,right-1,up+1,down);
+
+    return check_full(x,y,dimension)+D(x,y,dimension-1)+D(x,y+1,dimension-1)+D(x+1,y,dimension-1)+D(x+1,y+1,dimension-1);
 }
 int main()
 {
@@ -53,13 +46,6 @@ int main()
     scanf("%d",&n);
     int dimension;
     char temp[1000];
-
-    bool** matrix=new bool*[1000];
-    for(int i=0;i<1000;i++)
-    {
-        matrix[i]=new bool[1000];
-    }
-
     for(int i=0;i<n;i++)
     {
         scanf("%d",&dimension);
@@ -71,7 +57,7 @@ int main()
                 matrix[j][k]=temp[k]-48;
             }
         }
-        printf("%d\n",D(matrix,0,dimension,0,dimension));
+        printf("%d\n",D(0,0,dimension));
         is_calcualted.clear();
     }
     return 0;
