@@ -88,14 +88,6 @@ int main()
             infix.push_back(pch);
             pch = strtok (NULL, " ");
         }
-        for(auto it=infix.begin();it!=infix.end();it++)
-        {
-            if(it!=infix.end()-1)
-                printf("%s ",it->c_str());
-            else
-                printf("%s",it->c_str());
-        }
-        printf("\n");
         to_postfix(infix);
         for(auto it=postfix.begin();it!=postfix.end();it++)
         {
