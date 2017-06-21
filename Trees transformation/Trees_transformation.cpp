@@ -120,8 +120,7 @@ int main()
         printf("\n");
         tree.clear();
         scanf("%d",&H);
-        if(H!=0)
-            printf("\n");
+        printf("\n");
     }
 
 
