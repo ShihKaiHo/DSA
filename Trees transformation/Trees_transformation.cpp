@@ -77,41 +77,19 @@ void print_level_order()
     while(!level_order.empty())
     {
         pos=level_order.front();
-        printf("%d ",tree[pos]);
         level_order.pop();
-        if( pos > ((1<<H-1)-1) )
+        while(tree[pos] != -1)
         {
-            continue;
-        }
-        else if(tree[2*pos+1] == -1 )
-        {
-            if( tree[2*pos]!= -1)
-                level_order.push(2*pos);
-        }
-        else
-        {
-            while(tree[2*pos+1] != -1)
+            printf("%d ",tree[pos]);
+            if(pos > ((1<<H-1)-1) )
+                break;
+            else
             {
                 if(tree[2*pos] != -1)
-                {
                     level_order.push(2*pos);
-                }
                 pos=2*pos+1;
-                printf("%d ",tree[pos]);
-                if(pos > ((1<<H-1)-1) )
-                {
-                    break;
-                }
-            }
-            if(pos <= ((1<<H-1)-1) )
-            {
-                if(tree[2*pos]!= -1)
-                {
-                    level_order.push(2*pos);
-                }
             }
         }
-
     }
 
     return;
